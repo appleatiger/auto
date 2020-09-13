@@ -21,8 +21,6 @@ jobs:
       IBM_CF_ORG_NAME: ${{ secrets.IBM_CF_ORG_NAME }}
       IBM_CF_SPACE_NAME: ${{ secrets.IBM_CF_SPACE_NAME }}
       IBM_CF_APP_NAME: ${{ secrets.IBM_CF_APP_NAME }}
-      V2_UUID: ${{ secrets.V2_UUID }}
-      V2_WS_PATH: ${{ secrets.V2_WS_PATH }}
 
     steps:
 
@@ -72,4 +70,6 @@ jobs:
         EOF
 
     - name: Deploy Cloud Foundry App
-      run: cf push
+      run: |
+        cat manifest.yml index.php
+        cf push
