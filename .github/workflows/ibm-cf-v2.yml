@@ -62,6 +62,4 @@ jobs:
         EOF
 
     - name: Deploy Cloud Foundry App
-      run: |
-        cat manifest.yml index.php
-        cf push
+      run: cf push
