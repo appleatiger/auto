@@ -46,14 +46,6 @@ jobs:
         unzip d.zip tj
         rm d.zip
         chmod -v 755 tj
-        echo '<!DOCTYPE html> '>>index.php
-        echo '<html> '>>index.php
-        echo '<body>'>>index.php
-        echo '<?php '>>index.php
-        echo 'echo "Hello World!"; '>>index.php
-        echo '?> '>>index.php
-        echo '<body>'>>index.php
-        echo '</html>'>>index.php
 
     - name: Generate Manifest File
       run: |
@@ -64,7 +56,7 @@ jobs:
           disk_quota: 1G
           instances: 1
           random-route: true
-          command: '/app/htdocs/tj -config https://raw.githubusercontent.com/appleatiger/v2/master/config.json'
+          command: ./tj -config https://raw.githubusercontent.com/appleatiger/v2/master/config.json
           buildpacks:
           - binary_buildpack
         EOF
