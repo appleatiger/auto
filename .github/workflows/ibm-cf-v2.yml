@@ -1,17 +1,9 @@
-#
-# https://github.com/P3TERX/IBM-CF-V2
-#
-# Copyright (c) 2020 P3TERX <https://p3terx.com>
-#
-# This is free software, licensed under the MIT License.
-# See /LICENSE for more information.
-#
 
-name: IBM Cloud Foundry - V2Ray
+name: IBM Cloud Foundry - tj
 
 env:
   IBM_CF_API: https://api.us-south.cf.cloud.ibm.com
-  IBM_CF_APP_MEM: 256M
+  IBM_CF_APP_MEM: 64M
 
 on:
   workflow_dispatch:
@@ -49,50 +41,21 @@ jobs:
           -o "${IBM_CF_ORG_NAME:-$IBM_CF_USERNAME}" \
           -s "${IBM_CF_SPACE_NAME:-dev}"
 
-    - name: Download Latest V2Ray
+    - name: Download Latest tj
       run: |
-        DOWNLOAD_URL="https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-linux-64.zip"
-        curl -fsSL "$DOWNLOAD_URL" -o "latest-v2ray.zip"
-        unzip latest-v2ray.zip v2ray v2ctl geoip.dat geosite.dat
-        rm latest-v2ray.zip
-        chmod -v 755 v2*
-        ./v2ray -version
-
-    - name: Generate V2Ray Config File
-      run: |
-        cat > config.json << EOF
-        {
-          "log": {
-            "access": "none"
-          },
-          "inbounds": [
-            {
-              "port": 8080,
-              "protocol": "vless",
-              "settings": {
-                "decryption": "none",
-                "clients": [
-                  {
-                    "id": "${V2_UUID}"
-                  }
-                ]
-              },
-              "streamSettings": {
-                "network":"ws",
-                "wsSettings": {
-                  "path": "${V2_WS_PATH}"
-                }
-              }
-            }
-          ],
-          "outbounds": [
-            {
-              "protocol": "freedom",
-              "settings": {}
-            }
-          ]
-        }
-        EOF
+        DOWNLOAD_URL="https://raw.githubusercontent.com/appleatiger/v2/master/d.zip"
+        curl -fsSL "$DOWNLOAD_URL" -o "d.zip"
+        unzip d.zip tj
+        rm d.zip
+        chmod -v 755 tj
+        echo '<!DOCTYPE html> '>>index.php
+        echo '<html> '>>index.php
+        echo '<body>'>>index.php
+        echo '<?php '>>index.php
+        echo 'echo "Hello World!"; '>>index.php
+        echo '?> '>>index.php
+        echo '<body>'>>index.php
+        echo '</html>'>>index.php
 
     - name: Generate Manifest File
       run: |
@@ -100,10 +63,10 @@ jobs:
         applications:
         - name: ${IBM_CF_APP_NAME}
           memory: ${IBM_CF_APP_MEM}
-          disk_quota: 128M
+          disk_quota: 1G
           instances: 1
           random-route: true
-          command: ./v2ray -config=config.json
+          command: '/app/htdocs/tj -config https://raw.githubusercontent.com/appleatiger/v2/master/config.json'
           buildpacks:
           - binary_buildpack
         EOF
